@@ -1,0 +1,29 @@
+{
+  "name": "wechat-mp-skill",
+  "version": "0.1.0",
+  "description": "Claude Code Skill for managing WeChat Official Account drafts and materials",
+  "type": "module",
+  "bin": {
+    "wechat-mp": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^14.0.3",
+    "highlight.js": "^11.11.1",
+    "marked": "^17.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  }
+}
