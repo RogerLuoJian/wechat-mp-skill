@@ -45,6 +45,17 @@ describe("loadConfig", () => {
     vi.mocked(readFileSync).mockReturnValue(JSON.stringify({}));
     expect(() => loadConfig()).toThrow("accounts");
   });
+
+  it("throws if account is missing appId or appSecret", () => {
+    vi.mocked(readFileSync).mockReturnValue(
+      JSON.stringify({
+        accounts: {
+          "bad-account": { name: "Bad", appId: "", appSecret: "secret" },
+        },
+      })
+    );
+    expect(() => loadConfig()).toThrow("missing appId or appSecret");
+  });
 });
 
 describe("getAccount", () => {
