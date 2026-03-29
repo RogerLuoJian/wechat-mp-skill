@@ -84,8 +84,9 @@ function parseFrontmatter(content: string): {
   meta: Record<string, string>;
   body: string;
 } {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return { meta: {}, body: content };
+  const normalized = content.replace(/\r\n/g, "\n");
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!match) return { meta: {}, body: normalized };
 
   const meta: Record<string, string> = {};
   for (const line of match[1].split("\n")) {

@@ -17,7 +17,7 @@ function saveTokenStore(store: TokenStore): void {
   if (!existsSync(CONFIG_DIR)) {
     mkdirSync(CONFIG_DIR, { recursive: true });
   }
-  writeFileSync(TOKEN_PATH, JSON.stringify(store, null, 2), "utf-8");
+  writeFileSync(TOKEN_PATH, JSON.stringify(store, null, 2), { encoding: "utf-8", mode: 0o600 });
 }
 
 async function fetchToken(appId: string, appSecret: string): Promise<{ accessToken: string; expiresIn: number }> {
