@@ -72,6 +72,32 @@ thumb_media_id: thumb_456
     expect(result.content).toContain("<h1>HTML Title</h1>");
   });
 
+  it("omits empty content_source_url", () => {
+    const content = `---
+title: 测试文章
+thumb_media_id: thumb_123
+content_source_url: 
+---
+
+正文内容`;
+
+    const result = parseArticleFile(content, "article.md");
+    expect(result).not.toHaveProperty("content_source_url");
+  });
+
+  it("preserves non-empty content_source_url", () => {
+    const content = `---
+title: 测试文章
+thumb_media_id: thumb_123
+content_source_url: https://example.com/source
+---
+
+正文内容`;
+
+    const result = parseArticleFile(content, "article.md");
+    expect(result.content_source_url).toBe("https://example.com/source");
+  });
+
   it("throws if title is missing", () => {
     const content = `---
 thumb_media_id: thumb_123

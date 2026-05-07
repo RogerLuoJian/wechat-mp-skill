@@ -12,6 +12,16 @@ description: 管理微信公众号草稿箱和素材。发布文章到草稿箱�
 2. 如果报错 "Config file not found"，提示用户创建 `~/.wechat-mp/config.json`，参考 `config.example.json`
 3. 如果成功，显示可用公众号列表
 
+## 微信 API 网关
+
+默认请求 `https://api.weixin.qq.com`。如果当前环境需要通过固定出口 IP 或私有反向代理访问微信 API，优先设置环境变量，不要把带密码的网关 URL 写入仓库：
+
+```bash
+export WECHAT_MP_API_BASE_URL="https://wechatmp:<password>@xiwei.tech/wechat-mp-gateway-899583a3d2cc3cdbe62b1ac2ce57e4cf538aeee3/"
+```
+
+也兼容 `WECHAT_API_BASE_URL` 和 `WEIXIN_API_BASE_URL`。路径和 query 会保持不变，只替换 base URL。
+
 ## 多公众号选择
 
 1. 如果用户在请求中指定了公众号别名，所有命令使用 `--account=别名`
@@ -27,6 +37,7 @@ description: 管理微信公众号草稿箱和素材。发布文章到草稿箱�
 3. 检查文章 frontmatter 是否包含 `thumb_media_id`（封面图）
    - 如果没有，询问用户是否需要上传封面图
    - 如果需要，先执行 `material upload` 获取 media_id，然后补充到文章中
+   - `content_source_url` 不要写空字符串；没有原文链接时直接省略该字段，否则微信 API 可能报 `41039: invalid content_source_url`
 4. 执行 `draft create --file=路径 --account=别名`
 5. 创建成功后展示 media_id，询问用户是否立即发布
 6. 如需发布，执行 `draft publish --media-id=ID --account=别名`

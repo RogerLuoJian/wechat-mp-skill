@@ -116,12 +116,17 @@ export function parseArticleFile(
     filename.endsWith(".md") || filename.endsWith(".markdown");
   const htmlContent = isMarkdown ? convertMarkdownToHtml(body) : body;
 
-  return {
+  const article: Partial<ArticleMeta> = {
     title: meta.title,
     author: meta.author,
     digest: meta.digest,
     thumb_media_id: meta.thumb_media_id || "",
     content: htmlContent,
-    content_source_url: meta.content_source_url,
   };
+
+  if (meta.content_source_url) {
+    article.content_source_url = meta.content_source_url;
+  }
+
+  return article;
 }

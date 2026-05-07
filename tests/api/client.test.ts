@@ -15,6 +15,7 @@ import { getAccessToken, clearToken } from "../../src/token.js";
 describe("wechatGet", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it("injects access_token and returns data", async () => {
@@ -29,6 +30,20 @@ describe("wechatGet", () => {
       expect.any(Object)
     );
     expect(data.total_count).toBe(5);
+  });
+
+  it("uses WECHAT_MP_API_BASE_URL when provided", async () => {
+    vi.stubEnv("WECHAT_MP_API_BASE_URL", "https://proxy.example.com/wechat/");
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ total_count: 5 }),
+    });
+
+    await wechatGet("my-blog", "/cgi-bin/draft/batchget");
+    expect(mockFetch).toHaveBeenCalledWith(
+      "https://proxy.example.com/wechat/cgi-bin/draft/batchget?access_token=test_token",
+      expect.any(Object)
+    );
   });
 
   it("retries once on token expiry error", async () => {
@@ -64,6 +79,7 @@ describe("wechatGet", () => {
 describe("wechatPost", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it("sends JSON body with access_token", async () => {

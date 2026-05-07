@@ -2,6 +2,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { CONFIG_DIR, getAccount } from "./config.js";
+import { getWechatApiBaseUrl } from "./api/base.js";
 import type { TokenStore } from "./types.js";
 
 const TOKEN_PATH = join(CONFIG_DIR, "tokens.json");
@@ -21,7 +22,7 @@ function saveTokenStore(store: TokenStore): void {
 }
 
 async function fetchToken(appId: string, appSecret: string): Promise<{ accessToken: string; expiresIn: number }> {
-  const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${appSecret}`;
+  const url = `${getWechatApiBaseUrl()}/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${appSecret}`;
   const res = await fetch(url);
   const data = await res.json() as any;
   if (data.errcode) {

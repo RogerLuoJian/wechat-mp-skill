@@ -24,6 +24,7 @@ describe("getAccessToken", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it("fetches new token when no cache exists", async () => {
@@ -35,6 +36,19 @@ describe("getAccessToken", () => {
     const token = await getAccessToken("my-blog");
     expect(token).toBe("new_token");
     expect(mockFetch).toHaveBeenCalledOnce();
+  });
+
+  it("uses WECHAT_MP_API_BASE_URL when fetching a token", async () => {
+    vi.stubEnv("WECHAT_MP_API_BASE_URL", "https://proxy.example.com/wechat/");
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ access_token: "new_token", expires_in: 7200 }),
+    });
+
+    await getAccessToken("my-blog");
+    expect(mockFetch).toHaveBeenCalledWith(
+      "https://proxy.example.com/wechat/cgi-bin/token?grant_type=client_credential&appid=wx_test&secret=secret_test"
+    );
   });
 
   it("returns cached token when not expired", async () => {

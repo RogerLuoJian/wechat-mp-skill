@@ -1,7 +1,7 @@
 // src/api/client.ts
 import { getAccessToken, clearToken } from "../token.js";
+import { getWechatApiBaseUrl } from "./base.js";
 
-const BASE_URL = "https://api.weixin.qq.com";
 const TOKEN_EXPIRED_CODES = new Set([40001, 42001]);
 
 async function request(
@@ -12,7 +12,7 @@ async function request(
 ): Promise<any> {
   const token = await getAccessToken(accountAlias);
   const separator = path.includes("?") ? "&" : "?";
-  const url = `${BASE_URL}${path}${separator}access_token=${token}`;
+  const url = `${getWechatApiBaseUrl()}${path}${separator}access_token=${token}`;
 
   const res = await fetch(url, options);
   const data = await res.json() as any;
